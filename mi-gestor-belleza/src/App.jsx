@@ -4,6 +4,8 @@ import './App.css'
 import Header from './components/Header'
 import Tabs from './components/Tabs'
 import Panel from './components/Panel'
+import AlertSuccess from './components/AlertSuccess'
+import AlertError from './components/AlertError'
 import Select from 'react-select'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
@@ -73,7 +75,7 @@ function App() {
     try {
       const response = await api.get('/productos')
       setProductos(Array.isArray(response.data) ? response.data : [])
-      setMessage('success', 'Productos cargados.')
+      // No mostrar alerta de éxito al cargar/recargar productos
     } catch (error) {
       const errorMessage = error.response?.data?.detail || error.message || 'Error desconocido'
       setMessage('error', `No se pudo cargar: ${errorMessage}`)
@@ -261,6 +263,20 @@ function App() {
           </div>
         </div>
       </header>
+
+      {/* Alerts (success / error) */}
+      {status.type === 'success' && (
+        <AlertSuccess
+          message={status.message}
+          onClose={() => setStatus({ type: 'idle', message: '' })}
+        />
+      )}
+      {status.type === 'error' && (
+        <AlertError
+          message={status.message}
+          onClose={() => setStatus({ type: 'idle', message: '' })}
+        />
+      )}
 
       <div className="status-bar" data-type={status.type}>
         <span>{status.message || 'Listo para sincronizar.'}</span>

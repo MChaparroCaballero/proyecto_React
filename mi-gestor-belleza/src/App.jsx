@@ -9,13 +9,24 @@ import AlertError from './components/AlertError'
 import Select from 'react-select'
 import ConfirmDialog from './components/ConfirmDialog'
 
+/*
+  App.jsx - main application component
+  - Fetches and stores `productos` from the backend API.
+  - Provides create / edit / delete functionality for products.
+  - Manages UI state: tabs, loading flags, theme switch and alerts.
+  - Uses smaller presentational components located in `src/components/`.
+*/
+
+// Base URL for the API. Uses environment variable when available, otherwise local dev server.
 const API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
+// Axios instance preconfigured with base URL and JSON headers.
 const api = axios.create({
   baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json' },
 })
 
+// Template for empty product form used for create/edit flows
 const emptyForm = {
   nombre: '',
   categoria: '',
@@ -28,6 +39,8 @@ const emptyForm = {
 }
 
 function App() {
+  // --- Component state declarations ---
+  // `productos`: array of product objects fetched from the API
   const [productos, setProductos] = useState([])
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState({ type: 'idle', message: '' })
@@ -57,6 +70,7 @@ function App() {
   }, [productos])
 
   useEffect(() => {
+    // Fetch list of products on initial mount
     loadProductos()
   }, [])
 

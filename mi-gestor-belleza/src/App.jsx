@@ -4,6 +4,7 @@ import './App.css'
 import Header from './components/Header'
 import Tabs from './components/Tabs'
 import Panel from './components/Panel'
+import Select from 'react-select'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
@@ -181,18 +182,54 @@ function App() {
       proveedor: producto.proveedor,
       estado: producto.estado,
     })
+    // apply theme according to product state (Activo -> dark, Inactivo -> light)
+    setIsDark(producto.estado === 'Activo')
   }
 
-  const handleEditSelect = (event) => {
-    const selectedId = Number(event.target.value)
-    if (!selectedId) {
+  const productOptions = useMemo(
+    () => productos.map((p) => ({ value: String(p.cod), label: `#${p.cod} - ${p.nombre}` })),
+    [productos],
+  )
+
+  const handleProductoSelect = (option) => {
+    if (!option) {
       setEditForm({ ...emptyForm, cod: '' })
+      setIsDark(true)
       return
     }
+    const selectedId = Number(option.value)
     const selectedProducto = productos.find((item) => item.cod === selectedId)
     if (selectedProducto) {
       startEdit(selectedProducto)
     }
+  }
+
+  const selectStyles = {
+    control: (provided) => ({
+      ...provided,
+      background: isDark ? 'rgba(8,10,12,0.72)' : '#ffffff',
+      borderRadius: 12,
+      borderColor: isDark ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.08)',
+      paddingLeft: 6,
+      boxShadow: 'none',
+    }),
+    singleValue: (provided) => ({ ...provided, color: isDark ? '#fff' : '#0f172a' }),
+    menu: (provided) => ({
+      ...provided,
+      background: isDark ? 'rgba(8,10,12,0.92)' : '#ffffff',
+      color: isDark ? '#fff' : '#0f172a',
+      borderRadius: 8,
+      overflow: 'hidden',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      background: state.isFocused
+        ? isDark
+          ? 'rgba(255,255,255,0.06)'
+          : 'rgba(0,0,0,0.04)'
+        : 'transparent',
+      color: isDark ? '#fff' : '#0f172a',
+    }),
   }
 
   return (
@@ -446,14 +483,15 @@ function App() {
             <form className="form" onSubmit={handleEditSubmit}>
               <div className="field">
                 <label>Producto</label>
-                <select value={editForm.cod} onChange={handleEditSelect}>
-                  <option value="">Selecciona uno</option>
-                  {productos.map((producto) => (
-                    <option key={producto.cod} value={producto.cod}>
-                      #{producto.cod} - {producto.nombre}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  styles={selectStyles}
+                  classNamePrefix="react-select"
+                  options={productOptions}
+                  value={productOptions.find((o) => Number(o.value) === Number(editForm.cod)) || null}
+                  onChange={handleProductoSelect}
+                  isClearable
+                  placeholder="Selecciona uno"
+                />
               </div>
               <div className="field">
                 <label>Nombre</label>

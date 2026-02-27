@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import './App.css'
+import Header from './components/Header'
+import Tabs from './components/Tabs'
+import Panel from './components/Panel'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
@@ -194,23 +197,7 @@ function App() {
 
   return (
     <>
-      <header className="navbar">
-        <div className="navbar-left">
-          <div className="navbar-brand">
-            <span className="navbar-icon">💎</span>
-            <span>BeautyData</span>
-          </div>
-        </div>
-        <div className="navbar-right">
-          <button
-            className="theme-toggle"
-            onClick={() => setIsDark(!isDark)}
-            aria-label="Toggle dark mode"
-          >
-            {isDark ? '☀️' : '🌙'}
-          </button>
-        </div>
-      </header>
+      <Header isDark={isDark} setIsDark={setIsDark} />
 
       <div className="app">
       <header className="hero">
@@ -245,31 +232,12 @@ function App() {
         </button>
       </div>
 
-      <nav className="tabs">
-        <button
-          className={`tab-btn ${activeTab === 'inventory' ? 'active' : ''}`}
-          onClick={() => setActiveTab('inventory')}
-        >
-          📦 Inventario
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'create' ? 'active' : ''}`}
-          onClick={() => setActiveTab('create')}
-        >
-          ➕ Nuevo Producto
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'edit' ? 'active' : ''}`}
-          onClick={() => setActiveTab('edit')}
-        >
-          ✏️ Editar Producto
-        </button>
-      </nav>
+      <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <main className="content">
         {/* INVENTORY TAB */}
         {activeTab === 'inventory' && (
-          <section className="panel">
+          <Panel>
             <div className="panel-header">
               <h2>Inventario en vivo</h2>
               <p>Actualiza, edita o elimina desde la misma vista.</p>
@@ -350,12 +318,12 @@ function App() {
                 <p className="empty">No hay productos aun. Crea el primero.</p>
               ) : null}
             </div>
-          </section>
+          </Panel>
         )}
 
         {/* CREATE TAB */}
         {activeTab === 'create' && (
-          <section className="panel">
+          <Panel>
             <div className="panel-header">
               <h2>Nuevo producto</h2>
               <p>Registra un producto nuevo en segundos.</p>
@@ -465,12 +433,12 @@ function App() {
                 Guardar producto
               </button>
             </form>
-          </section>
+          </Panel>
         )}
 
         {/* EDIT TAB */}
         {activeTab === 'edit' && (
-          <section className="panel">
+          <Panel>
             <div className="panel-header">
               <h2>Editar producto</h2>
               <p>Selecciona un producto de la tabla inventario para editarlo.</p>
@@ -591,7 +559,7 @@ function App() {
                 Guardar cambios
               </button>
             </form>
-          </section>
+          </Panel>
         )}
       </main>
 

@@ -77,21 +77,41 @@ html {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+
 body {
-  margin: 0;
+ margin: 0;
   min-height: 100vh;
-  background: url("./assets/banner.png") center / cover fixed no-repeat,
-    rgba(80, 80, 80, 0.12);
-  background-blend-mode: darken;
+  /* Combinamos todo en una sola propiedad background */
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+              url("./assets/banner.png");
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  
+  /* Esto es vital: si la imagen no carga, usa este color. 
+     Pero no debe sobreponerse a la imagen */
+  background-color: var(--color-bg); 
+  
   color: var(--color-text);
-  background-color: var(--color-bg);
   animation: fade-in 0.8s ease-out;
 }
 
+/* Ajuste para el modo claro */
 [data-theme="light"] body {
-  background: url("./assets/banner.png") center / cover fixed no-repeat,
-    rgba(230, 220, 210, 0.4);
-  background-blend-mode: lighten;
+  background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), 
+              url("./assets/banner.png");
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-color: var(--color-bg);
+}
+
+[data-theme="light"] body {
+  /* Lighter overlay for light theme to keep image visible but softened */
+  background: linear-gradient(rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.18)),
+    url("./assets/banner.png") center / cover fixed no-repeat;
 }
 
 @keyframes fade-in {

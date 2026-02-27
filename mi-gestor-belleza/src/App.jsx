@@ -7,6 +7,7 @@ import Panel from './components/Panel'
 import AlertSuccess from './components/AlertSuccess'
 import AlertError from './components/AlertError'
 import Select from 'react-select'
+import ConfirmDialog from './components/ConfirmDialog'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
@@ -36,6 +37,8 @@ function App() {
   const [searchResult, setSearchResult] = useState(null)
   const [activeTab, setActiveTab] = useState('inventory')
   const [isDark, setIsDark] = useState(true)
+  const [confirmDelete, setConfirmDelete] = useState(null)
+  const [confirmLoading, setConfirmLoading] = useState(false)
 
   const stats = useMemo(() => {
     if (!productos.length) {
@@ -135,20 +138,24 @@ function App() {
     }
   }
 
-  const handleDelete = async (productoId) => {
-    if (!window.confirm('Eliminar este producto?')) {
-      return
-    }
-    setLoading(true)
+  // Open confirm dialog (actual deletion happens in confirmDeleteAction)
+  const handleDelete = (productoId) => {
+    setConfirmDelete(productoId)
+  }
+
+  const confirmDeleteAction = async () => {
+    if (!confirmDelete) return
+    setConfirmLoading(true)
     try {
-      await api.delete(`/productos/${productoId}`)
-      setProductos((prev) => prev.filter((item) => item.cod !== productoId))
+      await api.delete(`/productos/${confirmDelete}`)
+      setProductos((prev) => prev.filter((item) => item.cod !== confirmDelete))
       setMessage('success', 'Producto eliminado.')
     } catch (error) {
       const errorMessage = error.response?.data?.detail || error.message || 'Error desconocido'
       setMessage('error', `No se pudo eliminar: ${errorMessage}`)
     } finally {
-      setLoading(false)
+      setConfirmLoading(false)
+      setConfirmDelete(null)
     }
   }
 
@@ -276,6 +283,16 @@ function App() {
           onClose={() => setStatus({ type: 'idle', message: '' })}
         />
       )}
+
+      {/* Confirm delete dialog */}
+      <ConfirmDialog
+        open={!!confirmDelete}
+        title="Eliminar producto"
+        message="¿Deseas eliminar este producto? Esta acción no se puede deshacer."
+        onConfirm={confirmDeleteAction}
+        onCancel={() => setConfirmDelete(null)}
+        loading={confirmLoading}
+      />
 
       <div className="status-bar" data-type={status.type}>
         <span>{status.message || 'Listo para sincronizar.'}</span>

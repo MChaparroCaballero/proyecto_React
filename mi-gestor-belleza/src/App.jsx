@@ -184,8 +184,7 @@ function App() {
       proveedor: producto.proveedor,
       estado: producto.estado,
     })
-    // apply theme according to product state (Activo -> dark, Inactivo -> light)
-    setIsDark(producto.estado === 'Activo')
+    // Do NOT change theme when selecting a product
   }
 
   const productOptions = useMemo(
@@ -196,7 +195,7 @@ function App() {
   const handleProductoSelect = (option) => {
     if (!option) {
       setEditForm({ ...emptyForm, cod: '' })
-      setIsDark(true)
+      // keep current theme when clearing selection
       return
     }
     const selectedId = Number(option.value)

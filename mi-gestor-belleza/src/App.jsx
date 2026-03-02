@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import './App.css'
 import Header from './components/Header'
@@ -6,27 +7,28 @@ import Tabs from './components/Tabs'
 import Panel from './components/Panel'
 import AlertSuccess from './components/AlertSuccess'
 import AlertError from './components/AlertError'
-import Select from 'react-select'
 import ConfirmDialog from './components/ConfirmDialog'
+import Inventory from './pages/Inventory'
+import Create from './pages/Create'
+import Edit from './pages/Edit'
 
 /*
-  App.jsx - main application component
-  - Fetches and stores `productos` from the backend API.
-  - Provides create / edit / delete functionality for products.
-  - Manages UI state: tabs, loading flags, theme switch and alerts.
-  - Uses smaller presentational components located in `src/components/`.
+  App.jsx - componente principal
+  - Gestiona llamadas a la API para productos (CRUD).
+  - Mantiene el estado de la aplicación (carga, formularios, mensajes).
+  - Renderiza la cabecera, las rutas y las páginas de la aplicación.
 */
 
-// Base URL for the API. Uses environment variable when available, otherwise local dev server.
+// Dirección base de la API. Se puede cambiar con la variable de entorno VITE_API_URL.
 const API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
-// Axios instance preconfigured with base URL and JSON headers.
+// Instancia de axios con la URL base y cabeceras JSON.
 const api = axios.create({
   baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json' },
 })
 
-// Template for empty product form used for create/edit flows
+// Plantilla para un formulario vacío usado al crear o editar productos
 const emptyForm = {
   nombre: '',
   categoria: '',
@@ -39,16 +41,16 @@ const emptyForm = {
 }
 
 function App() {
-  // --- Component state declarations ---
-  // `productos`: array of product objects fetched from the API
+  // --- Declaración de estados del componente ---
+  // `productos`: lista de productos obtenida desde la API
   const [productos, setProductos] = useState([])
   const [loading, setLoading] = useState(false)
+  // `status` guarda mensajes visibles para el usuario
   const [status, setStatus] = useState({ type: 'idle', message: '' })
   const [createForm, setCreateForm] = useState(emptyForm)
   const [editForm, setEditForm] = useState({ ...emptyForm, cod: '' })
   const [searchId, setSearchId] = useState('')
   const [searchResult, setSearchResult] = useState(null)
-  const [activeTab, setActiveTab] = useState('inventory')
   const [isDark, setIsDark] = useState(true)
   const [confirmDelete, setConfirmDelete] = useState(null)
   const [confirmLoading, setConfirmLoading] = useState(false)
@@ -73,6 +75,8 @@ function App() {
     // Fetch list of products on initial mount
     loadProductos()
   }, [])
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const html = document.documentElement
@@ -101,6 +105,7 @@ function App() {
     }
   }
 
+  // Convierte datos del formulario a tipos correctos antes de enviar a la API
   const normalizePayload = (form) => ({
     nombre: form.nombre.trim(),
     categoria: form.categoria.trim(),
@@ -112,6 +117,7 @@ function App() {
     estado: form.estado.trim() || 'Activo',
   })
 
+  // Crea un producto en la API y actualiza la lista local
   const handleCreate = async (event) => {
     event.preventDefault()
     setLoading(true)
@@ -120,6 +126,9 @@ function App() {
       const response = await api.post('/productos', payload)
       setProductos((prev) => [response.data, ...prev])
       setCreateForm(emptyForm)
+      // After create, open edit view for the created product
+      startEdit(response.data)
+      navigate(`/edit/${response.data.cod}`)
       setMessage('success', 'Producto creado.')
     } catch (error) {
       const errorMessage = error.response?.data?.detail || error.message || 'Error desconocido'
@@ -129,6 +138,7 @@ function App() {
     }
   }
 
+  // Envía los cambios de un producto existente a la API
   const handleEditSubmit = async (event) => {
     event.preventDefault()
     if (!editForm.cod) {
@@ -152,11 +162,12 @@ function App() {
     }
   }
 
-  // Open confirm dialog (actual deletion happens in confirmDeleteAction)
+  // Abre un diálogo para confirmar eliminación
   const handleDelete = (productoId) => {
     setConfirmDelete(productoId)
   }
 
+  // Ejecuta la eliminación en la API una vez confirmado
   const confirmDeleteAction = async () => {
     if (!confirmDelete) return
     setConfirmLoading(true)
@@ -173,6 +184,7 @@ function App() {
     }
   }
 
+  // Busca un producto por ID y guarda el resultado
   const handleSearch = async (event) => {
     event.preventDefault()
     if (!searchId) {
@@ -206,6 +218,25 @@ function App() {
       estado: producto.estado,
     })
     // Do NOT change theme when selecting a product
+  }
+
+  const goToEdit = (producto) => {
+    startEdit(producto)
+    navigate(`/edit/${producto.cod}`)
+  }
+
+  const fetchAndStartEdit = async (id) => {
+    if (!id) return
+    setLoading(true)
+    try {
+      const response = await api.get(`/productos/${id}`)
+      startEdit(response.data)
+    } catch (error) {
+      const errorMessage = error.response?.data?.detail || error.message || 'Error desconocido'
+      setMessage('error', `No se pudo cargar producto: ${errorMessage}`)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const productOptions = useMemo(
@@ -314,337 +345,45 @@ function App() {
           {loading ? 'Cargando...' : 'Refrescar'}
         </button>
       </div>
-
-      <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Tabs />
 
       <main className="content">
-        {/* INVENTORY TAB */}
-        {activeTab === 'inventory' && (
-          <Panel>
-            <div className="panel-header">
-              <h2>Inventario en vivo</h2>
-              <p>Actualiza, edita o elimina desde la misma vista.</p>
-            </div>
-
-            <form className="search" onSubmit={handleSearch}>
-              <input
-                type="number"
-                min="1"
-                placeholder="Buscar por ID"
-                value={searchId}
-                onChange={(event) => setSearchId(event.target.value)}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Inventory
+                productos={productos}
+                loading={loading}
+                searchId={searchId}
+                setSearchId={setSearchId}
+                searchResult={searchResult}
+                handleSearch={handleSearch}
+                handleDelete={handleDelete}
+                onStartEdit={goToEdit}
               />
-              <button type="submit" disabled={loading}>
-                Buscar
-              </button>
-            </form>
-
-            {searchResult ? (
-              <div className="highlight">
-                <div>
-                  <h3>{searchResult.nombre}</h3>
-                  <p>{searchResult.descripcion}</p>
-                </div>
-                <div className="highlight-meta">
-                  <span>#{searchResult.cod}</span>
-                  <span>{searchResult.categoria}</span>
-                  <span>{searchResult.estado}</span>
-                </div>
-              </div>
-            ) : null}
-
-            <div className="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Producto</th>
-                    <th>Categoria</th>
-                    <th>Stock</th>
-                    <th>Venta</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {productos.map((producto) => (
-                    <tr key={producto.cod}>
-                      <td>#{producto.cod}</td>
-                      <td>
-                        <div className="product-name">{producto.nombre}</div>
-                        <span className="product-desc">{producto.descripcion}</span>
-                      </td>
-                      <td>{producto.categoria}</td>
-                      <td>{producto.stock}</td>
-                      <td>${producto.precio_de_venta}</td>
-                      <td>
-                        <div className="actions">
-                          <button type="button" onClick={() => {
-                            startEdit(producto);
-                            setActiveTab('edit');
-                          }}>
-                            Editar
-                          </button>
-                          <button
-                            type="button"
-                            className="danger"
-                            onClick={() => handleDelete(producto.cod)}
-                          >
-                            Eliminar
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {!productos.length && !loading ? (
-                <p className="empty">No hay productos aun. Crea el primero.</p>
-              ) : null}
-            </div>
-          </Panel>
-        )}
-
-        {/* CREATE TAB */}
-        {activeTab === 'create' && (
-          <Panel>
-            <div className="panel-header">
-              <h2>Nuevo producto</h2>
-              <p>Registra un producto nuevo en segundos.</p>
-            </div>
-            <form className="form" onSubmit={handleCreate}>
-              <div className="field">
-                <label>Nombre</label>
-                <input
-                  value={createForm.nombre}
-                  onChange={(event) =>
-                    setCreateForm((prev) => ({ ...prev, nombre: event.target.value }))
-                  }
-                  required
-                />
-              </div>
-              <div className="field">
-                <label>Categoria</label>
-                <input
-                  value={createForm.categoria}
-                  onChange={(event) =>
-                    setCreateForm((prev) => ({ ...prev, categoria: event.target.value }))
-                  }
-                  required
-                />
-              </div>
-              <div className="field">
-                <label>Descripcion</label>
-                <input
-                  value={createForm.descripcion}
-                  onChange={(event) =>
-                    setCreateForm((prev) => ({ ...prev, descripcion: event.target.value }))
-                  }
-                  required
-                />
-              </div>
-              <div className="field-grid">
-                <div className="field">
-                  <label>Compra</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={createForm.precio_de_compra}
-                    onChange={(event) =>
-                      setCreateForm((prev) => ({
-                        ...prev,
-                        precio_de_compra: event.target.value,
-                      }))
-                    }
-                    required
-                  />
-                </div>
-                <div className="field">
-                  <label>Venta</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={createForm.precio_de_venta}
-                    onChange={(event) =>
-                      setCreateForm((prev) => ({
-                        ...prev,
-                        precio_de_venta: event.target.value,
-                      }))
-                    }
-                    required
-                  />
-                </div>
-              </div>
-              <div className="field-grid">
-                <div className="field">
-                  <label>Stock</label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={createForm.stock}
-                    onChange={(event) =>
-                      setCreateForm((prev) => ({ ...prev, stock: event.target.value }))
-                    }
-                    required
-                  />
-                </div>
-                <div className="field">
-                  <label>Proveedor</label>
-                  <input
-                    value={createForm.proveedor}
-                    onChange={(event) =>
-                      setCreateForm((prev) => ({ ...prev, proveedor: event.target.value }))
-                    }
-                    required
-                  />
-                </div>
-              </div>
-              <div className="field">
-                <label>Estado</label>
-                <select
-                  value={createForm.estado}
-                  onChange={(event) =>
-                    setCreateForm((prev) => ({ ...prev, estado: event.target.value }))
-                  }
-                >
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
-                </select>
-              </div>
-              <button type="submit" disabled={loading}>
-                Guardar producto
-              </button>
-            </form>
-          </Panel>
-        )}
-
-        {/* EDIT TAB */}
-        {activeTab === 'edit' && (
-          <Panel>
-            <div className="panel-header">
-              <h2>Editar producto</h2>
-              <p>Selecciona un producto de la tabla inventario para editarlo.</p>
-            </div>
-            <form className="form" onSubmit={handleEditSubmit}>
-              <div className="field">
-                <label>Producto</label>
-                <Select
-                  styles={selectStyles}
-                  classNamePrefix="react-select"
-                  options={productOptions}
-                  value={productOptions.find((o) => Number(o.value) === Number(editForm.cod)) || null}
-                  onChange={handleProductoSelect}
-                  isClearable
-                  placeholder="Selecciona uno"
-                />
-              </div>
-              <div className="field">
-                <label>Nombre</label>
-                <input
-                  value={editForm.nombre}
-                  onChange={(event) =>
-                    setEditForm((prev) => ({ ...prev, nombre: event.target.value }))
-                  }
-                  required
-                />
-              </div>
-              <div className="field">
-                <label>Categoria</label>
-                <input
-                  value={editForm.categoria}
-                  onChange={(event) =>
-                    setEditForm((prev) => ({ ...prev, categoria: event.target.value }))
-                  }
-                  required
-                />
-              </div>
-              <div className="field">
-                <label>Descripcion</label>
-                <input
-                  value={editForm.descripcion}
-                  onChange={(event) =>
-                    setEditForm((prev) => ({ ...prev, descripcion: event.target.value }))
-                  }
-                  required
-                />
-              </div>
-              <div className="field-grid">
-                <div className="field">
-                  <label>Compra</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={editForm.precio_de_compra}
-                    onChange={(event) =>
-                      setEditForm((prev) => ({
-                        ...prev,
-                        precio_de_compra: event.target.value,
-                      }))
-                    }
-                    required
-                  />
-                </div>
-                <div className="field">
-                  <label>Venta</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={editForm.precio_de_venta}
-                    onChange={(event) =>
-                      setEditForm((prev) => ({
-                        ...prev,
-                        precio_de_venta: event.target.value,
-                      }))
-                    }
-                    required
-                  />
-                </div>
-              </div>
-              <div className="field-grid">
-                <div className="field">
-                  <label>Stock</label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={editForm.stock}
-                    onChange={(event) =>
-                      setEditForm((prev) => ({ ...prev, stock: event.target.value }))
-                    }
-                    required
-                  />
-                </div>
-                <div className="field">
-                  <label>Proveedor</label>
-                  <input
-                    value={editForm.proveedor}
-                    onChange={(event) =>
-                      setEditForm((prev) => ({ ...prev, proveedor: event.target.value }))
-                    }
-                    required
-                  />
-                </div>
-              </div>
-              <div className="field">
-                <label>Estado</label>
-                <select
-                  value={editForm.estado}
-                  onChange={(event) =>
-                    setEditForm((prev) => ({ ...prev, estado: event.target.value }))
-                  }
-                >
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
-                </select>
-              </div>
-              <button type="submit" disabled={loading}>
-                Guardar cambios
-              </button>
-            </form>
-          </Panel>
-        )}
+            }
+          />
+          <Route
+            path="/create"
+            element={<Create createForm={createForm} setCreateForm={setCreateForm} handleCreate={handleCreate} loading={loading} />}
+          />
+          <Route
+            path="/edit/:id?"
+            element={
+              <Edit
+                editForm={editForm}
+                setEditForm={setEditForm}
+                handleEditSubmit={handleEditSubmit}
+                loading={loading}
+                productos={productos}
+                productOptions={productOptions}
+                handleProductoSelect={handleProductoSelect}
+                fetchAndStartEdit={fetchAndStartEdit}
+              />
+            }
+          />
+        </Routes>
       </main>
 
       <footer className="footer">

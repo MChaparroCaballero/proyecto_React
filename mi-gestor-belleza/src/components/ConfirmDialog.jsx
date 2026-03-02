@@ -1,5 +1,7 @@
 import React from 'react'
 
+// Componente para pedir confirmación antes de acciones destructivas
+// Muestra un modal con título, mensaje y botones de confirmar/cancelar
 export default function ConfirmDialog({ open, title = 'Confirmar', message, onConfirm, onCancel, loading }) {
   if (!open) return null
   return (

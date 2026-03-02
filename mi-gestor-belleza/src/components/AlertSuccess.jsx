@@ -1,5 +1,7 @@
 import React from 'react'
 
+// Componente para mostrar mensajes de éxito
+// `message` es el texto a mostrar, `onClose` cierra la alerta si existe
 export default function AlertSuccess({ message, onClose }) {
   if (!message) return null
   return (

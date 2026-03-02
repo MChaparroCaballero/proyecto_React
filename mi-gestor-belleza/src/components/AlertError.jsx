@@ -1,5 +1,7 @@
 import React from 'react'
 
+// Componente para mostrar mensajes de error
+// `message` se muestra cuando hay un error; `onClose` cierra la alerta
 export default function AlertError({ message, onClose }) {
   if (!message) return null
   return (

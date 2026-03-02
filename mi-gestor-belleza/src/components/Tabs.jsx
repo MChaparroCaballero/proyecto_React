@@ -1,26 +1,20 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 
-export default function Tabs({ activeTab, setActiveTab }) {
+// Componente de navegación en la parte superior
+// Usa enlaces de react-router para cambiar de vista sin recargar
+export default function Tabs() {
   return (
     <nav className="tabs">
-      <button
-        className={`tab-btn ${activeTab === 'inventory' ? 'active' : ''}`}
-        onClick={() => setActiveTab('inventory')}
-      >
+      <NavLink to="/" end className={({ isActive }) => `tab-btn ${isActive ? 'active' : ''}`}>
         📦 Inventario
-      </button>
-      <button
-        className={`tab-btn ${activeTab === 'create' ? 'active' : ''}`}
-        onClick={() => setActiveTab('create')}
-      >
+      </NavLink>
+      <NavLink to="/create" className={({ isActive }) => `tab-btn ${isActive ? 'active' : ''}`}>
         ➕ Nuevo Producto
-      </button>
-      <button
-        className={`tab-btn ${activeTab === 'edit' ? 'active' : ''}`}
-        onClick={() => setActiveTab('edit')}
-      >
+      </NavLink>
+      <NavLink to="/edit" className={({ isActive }) => `tab-btn ${isActive ? 'active' : ''}`}>
         ✏️ Editar Producto
-      </button>
+      </NavLink>
     </nav>
   )
 }

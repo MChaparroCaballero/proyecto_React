@@ -132,6 +132,18 @@ Ejemplos de rutas de captura (añade los archivos manualmente):
   <img width="100%" alt="despues_nuevo_producto" src="https://github.com/user-attachments/assets/95dbb84c-a23a-4fd0-8e6a-5f2f4c488ea0" />
 </p>
 
+### Buscar producto
+<p align="center">
+  <img width="100%" alt="buscar_por_id" src="https://github.com/user-attachments/assets/12f8b2f9-2e1b-4f2e-ba9c-58a185bf30e4" />
+ />
+</p>
+
+### Resultado de buscar producto
+<p align="center">
+  <img width="100%" alt="despues_buscar_por_id" src="https://github.com/user-attachments/assets/2cd46223-7dc8-475f-b680-c029376809a9" />
+" />
+</p>
+
 ### 🗑️ Eliminar Producto
 <p align="center">
   <img width="100%" alt="eliminar_producto" src="https://github.com/user-attachments/assets/cd598c7a-caa3-4444-a702-5d28db773e89" />
@@ -141,6 +153,8 @@ Ejemplos de rutas de captura (añade los archivos manualmente):
 <p align="center">
   <img width="100%" alt="despues_eliminar" src="https://github.com/user-attachments/assets/8643d125-c52d-43ff-a08f-cb58c8717dae" />
 </p>
+
+
 
 
 

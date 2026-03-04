@@ -41,17 +41,22 @@ const emptyForm = {
 }
 
 function App() {
-  // --- Declaración de estados del componente ---
-  // `productos`: lista de productos obtenida desde la API
+  // Estados principales
+  // `productos`: lista con los productos cargados desde la API
   const [productos, setProductos] = useState([])
+  // `loading`: controla indicadores de carga en la UI
   const [loading, setLoading] = useState(false)
-  // `status` guarda mensajes visibles para el usuario
+  // `status`: mensajes de éxito o error que se muestran al usuario
   const [status, setStatus] = useState({ type: 'idle', message: '' })
+  // Formularios para crear y editar
   const [createForm, setCreateForm] = useState(emptyForm)
   const [editForm, setEditForm] = useState({ ...emptyForm, cod: '' })
+  // Búsqueda por ID: `searchId` guarda el input y `searchResult` el producto encontrado
   const [searchId, setSearchId] = useState('')
   const [searchResult, setSearchResult] = useState(null)
+  // Tema de la UI
   const [isDark, setIsDark] = useState(true)
+  // Eliminación: id pendiente de confirmar y estado de la operación
   const [confirmDelete, setConfirmDelete] = useState(null)
   const [confirmLoading, setConfirmLoading] = useState(false)
 
@@ -90,13 +95,13 @@ function App() {
   const setMessage = (type, message) => {
     setStatus({ type, message })
   }
-
+  // Carga la lista completa de productos desde la API
   const loadProductos = async () => {
     setLoading(true)
     try {
       const response = await api.get('/productos')
       setProductos(Array.isArray(response.data) ? response.data : [])
-      // No mostrar alerta de éxito al cargar/recargar productos
+      // No se muestra mensaje de éxito al recargar la lista
     } catch (error) {
       const errorMessage = error.response?.data?.detail || error.message || 'Error desconocido'
       setMessage('error', `No se pudo cargar: ${errorMessage}`)
@@ -138,6 +143,9 @@ function App() {
     }
   }
 
+  // handleCreate: envia el formulario de creación a la API
+  // Añade el nuevo producto al estado local y abre la vista de edición
+
   // Envía los cambios de un producto existente a la API
   const handleEditSubmit = async (event) => {
     event.preventDefault()
@@ -162,6 +170,8 @@ function App() {
     }
   }
 
+  // handleEditSubmit: envía cambios de edición a la API y actualiza la lista local
+
   // Abre un diálogo para confirmar eliminación
   const handleDelete = (productoId) => {
     setConfirmDelete(productoId)
@@ -184,6 +194,8 @@ function App() {
     }
   }
 
+  // confirmDeleteAction: llama a la API para eliminar y remueve el producto del estado
+
   // Busca un producto por ID y guarda el resultado
   const handleSearch = async (event) => {
     event.preventDefault()
@@ -204,6 +216,8 @@ function App() {
       setLoading(false)
     }
   }
+
+  // handleSearch: busca un producto por id y guarda el resultado en `searchResult`
 
   const startEdit = (producto) => {
     setEditForm({
@@ -238,6 +252,8 @@ function App() {
       setLoading(false)
     }
   }
+
+  // fetchAndStartEdit: trae un producto por id y lo carga en el formulario de edición
 
   const productOptions = useMemo(
     () => productos.map((p) => ({ value: String(p.cod), label: `#${p.cod} - ${p.nombre}` })),
@@ -358,6 +374,7 @@ function App() {
                 searchId={searchId}
                 setSearchId={setSearchId}
                 searchResult={searchResult}
+                setSearchResult={setSearchResult}
                 handleSearch={handleSearch}
                 handleDelete={handleDelete}
                 onStartEdit={goToEdit}

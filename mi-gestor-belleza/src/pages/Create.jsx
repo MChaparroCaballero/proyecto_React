@@ -2,7 +2,7 @@ import React from 'react'
 import Panel from '../components/Panel'
 
 // Página para crear un nuevo producto
-// Usa el formulario y llama a `handleCreate` al enviar
+// Muestra un formulario y envía los datos con `handleCreate`
 export default function Create({ createForm, setCreateForm, handleCreate, loading }) {
   return (
     <Panel>
@@ -10,8 +10,10 @@ export default function Create({ createForm, setCreateForm, handleCreate, loadin
         <h2>Nuevo producto</h2>
         <p>Registra un producto nuevo en segundos.</p>
       </div>
+      {/* Formulario de creación */}
       <form className="form" onSubmit={handleCreate}>
         <div className="field">
+          {/* Campo: nombre del producto */}
           <label>Nombre</label>
           <input
             value={createForm.nombre}
@@ -22,6 +24,7 @@ export default function Create({ createForm, setCreateForm, handleCreate, loadin
           />
         </div>
         <div className="field">
+          {/* Campo: categoria */}
           <label>Categoria</label>
           <input
             value={createForm.categoria}
@@ -32,6 +35,7 @@ export default function Create({ createForm, setCreateForm, handleCreate, loadin
           />
         </div>
         <div className="field">
+          {/* Campo: descripcion corta */}
           <label>Descripcion</label>
           <input
             value={createForm.descripcion}
@@ -43,6 +47,7 @@ export default function Create({ createForm, setCreateForm, handleCreate, loadin
         </div>
         <div className="field-grid">
           <div className="field">
+            {/* Campo: precio de compra */}
             <label>Compra</label>
             <input
               type="number"
@@ -59,6 +64,7 @@ export default function Create({ createForm, setCreateForm, handleCreate, loadin
             />
           </div>
           <div className="field">
+            {/* Campo: precio de venta */}
             <label>Venta</label>
             <input
               type="number"
@@ -77,6 +83,7 @@ export default function Create({ createForm, setCreateForm, handleCreate, loadin
         </div>
         <div className="field-grid">
           <div className="field">
+            {/* Campo: unidades en stock */}
             <label>Stock</label>
             <input
               type="number"
@@ -89,6 +96,7 @@ export default function Create({ createForm, setCreateForm, handleCreate, loadin
             />
           </div>
           <div className="field">
+            {/* Campo: proveedor del producto */}
             <label>Proveedor</label>
             <input
               value={createForm.proveedor}
@@ -100,6 +108,7 @@ export default function Create({ createForm, setCreateForm, handleCreate, loadin
           </div>
         </div>
         <div className="field">
+          {/* Campo: estado activo o inactivo */}
           <label>Estado</label>
           <select
             value={createForm.estado}
@@ -111,6 +120,7 @@ export default function Create({ createForm, setCreateForm, handleCreate, loadin
             <option value="Inactivo">Inactivo</option>
           </select>
         </div>
+        {/* Botón para enviar el formulario */}
         <button type="submit" disabled={loading}>
           Guardar producto
         </button>

@@ -2,17 +2,20 @@ import React from 'react'
 import Panel from '../components/Panel'
 
 // Página de inventario
-// Muestra la lista de productos y permite buscar, editar o eliminar
+// Lista los productos y permite buscar por id, editar o eliminar
 export default function Inventory({
   productos,
   loading,
   searchId,
   setSearchId,
   searchResult,
+  setSearchResult,
   handleSearch,
   handleDelete,
   onStartEdit,
 }) {
+  // Si hay resultado de búsqueda, mostrar solo ese producto
+  const rows = searchResult ? [searchResult] : productos
   return (
     <Panel>
       <div className="panel-header">
@@ -21,6 +24,7 @@ export default function Inventory({
       </div>
 
       <form className="search" onSubmit={handleSearch}>
+        {/* Formulario de búsqueda por ID */}
         <input
           type="number"
           min="1"
@@ -31,8 +35,21 @@ export default function Inventory({
         <button type="submit" disabled={loading}>
           Buscar
         </button>
+        {searchResult ? (
+          <button
+            type="button"
+            onClick={() => {
+              setSearchResult(null)
+              setSearchId('')
+            }}
+            disabled={loading}
+          >
+            Mostrar todo
+          </button>
+        ) : null}
       </form>
 
+      {/* Destacado del producto encontrado */}
       {searchResult ? (
         <div className="highlight">
           <div>
@@ -60,7 +77,8 @@ export default function Inventory({
             </tr>
           </thead>
           <tbody>
-            {productos.map((producto) => (
+            {rows.map((producto) => (
+              // Fila por cada producto a mostrar
               <tr key={producto.cod}>
                 <td>#{producto.cod}</td>
                 <td>
@@ -72,6 +90,7 @@ export default function Inventory({
                 <td>${producto.precio_de_venta}</td>
                 <td>
                   <div className="actions">
+                    {/* Botón para abrir edición */}
                     <button
                       type="button"
                       onClick={() => {
@@ -80,6 +99,7 @@ export default function Inventory({
                     >
                       Editar
                     </button>
+                    {/* Botón para pedir eliminación */}
                     <button
                       type="button"
                       className="danger"
@@ -93,7 +113,7 @@ export default function Inventory({
             ))}
           </tbody>
         </table>
-        {!productos.length && !loading ? (
+        {!rows.length && !loading ? (
           <p className="empty">No hay productos aun. Crea el primero.</p>
         ) : null}
       </div>

@@ -3,8 +3,8 @@ import Panel from '../components/Panel'
 import Select from 'react-select'
 import { useParams } from 'react-router-dom'
 
-// Página de edición
-// Permite cargar un producto por ruta (/edit/:id) o seleccionar uno
+// Página para editar un producto
+// Permite elegir un producto o cargarlo por id en la ruta
 export default function Edit({
   editForm,
   setEditForm,
@@ -18,7 +18,7 @@ export default function Edit({
   const params = useParams()
 
   useEffect(() => {
-    // Si la ruta tiene un id y el formulario actual no coincide, cargar el producto
+    // Si la ruta tiene id, cargar ese producto en el formulario
     if (params.id) {
       const idNum = Number(params.id)
       if (String(editForm.cod) !== String(idNum)) {
@@ -33,8 +33,10 @@ export default function Edit({
         <h2>Editar producto</h2>
         <p>Selecciona un producto de la tabla inventario para editarlo.</p>
       </div>
+      {/* Formulario de edición */}
       <form className="form" onSubmit={handleEditSubmit}>
         <div className="field">
+          {/* Selector para elegir producto */}
           <label>Producto</label>
           <Select
             styles={{}}
@@ -47,6 +49,7 @@ export default function Edit({
           />
         </div>
         <div className="field">
+          {/* Campo: nombre editable */}
           <label>Nombre</label>
           <input
             value={editForm.nombre}
@@ -55,6 +58,7 @@ export default function Edit({
           />
         </div>
         <div className="field">
+          {/* Campo: categoria editable */}
           <label>Categoria</label>
           <input
             value={editForm.categoria}
@@ -63,6 +67,7 @@ export default function Edit({
           />
         </div>
         <div className="field">
+          {/* Campo: descripcion editable */}
           <label>Descripcion</label>
           <input
             value={editForm.descripcion}
@@ -72,6 +77,7 @@ export default function Edit({
         </div>
         <div className="field-grid">
           <div className="field">
+            {/* Campo: precio de compra editable */}
             <label>Compra</label>
             <input
               type="number"
@@ -85,6 +91,7 @@ export default function Edit({
             />
           </div>
           <div className="field">
+            {/* Campo: precio de venta editable */}
             <label>Venta</label>
             <input
               type="number"
@@ -100,6 +107,7 @@ export default function Edit({
         </div>
         <div className="field-grid">
           <div className="field">
+            {/* Campo: stock editable */}
             <label>Stock</label>
             <input
               type="number"
@@ -110,6 +118,7 @@ export default function Edit({
             />
           </div>
           <div className="field">
+            {/* Campo: proveedor editable */}
             <label>Proveedor</label>
             <input
               value={editForm.proveedor}
@@ -119,6 +128,7 @@ export default function Edit({
           </div>
         </div>
         <div className="field">
+          {/* Campo: estado */}
           <label>Estado</label>
           <select
             value={editForm.estado}
@@ -128,6 +138,7 @@ export default function Edit({
             <option value="Inactivo">Inactivo</option>
           </select>
         </div>
+        {/* Botón para guardar cambios */}
         <button type="submit" disabled={loading}>
           Guardar cambios
         </button>

@@ -49,21 +49,6 @@ export default function Inventory({
         ) : null}
       </form>
 
-      {/* Destacado del producto encontrado */}
-      {searchResult ? (
-        <div className="highlight">
-          <div>
-            <h3>{searchResult.nombre}</h3>
-            <p>{searchResult.descripcion}</p>
-          </div>
-          <div className="highlight-meta">
-            <span>#{searchResult.cod}</span>
-            <span>{searchResult.categoria}</span>
-            <span>{searchResult.estado}</span>
-          </div>
-        </div>
-      ) : null}
-
       <div className="table-wrap">
         <table>
           <thead>

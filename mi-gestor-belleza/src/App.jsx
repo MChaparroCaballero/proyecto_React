@@ -355,12 +355,6 @@ function App() {
         loading={confirmLoading}
       />
 
-      <div className="status-bar" data-type={status.type}>
-        <span>{status.message || 'Listo para sincronizar.'}</span>
-        <button type="button" onClick={loadProductos} disabled={loading}>
-          {loading ? 'Cargando...' : 'Refrescar'}
-        </button>
-      </div>
       <Tabs />
 
       <main className="content">

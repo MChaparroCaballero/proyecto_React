@@ -145,32 +145,6 @@
   margin-top: 4px;
 }
 
-.status-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px) saturate(180%);
-  border-radius: 16px;
-  padding: 12px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  margin-bottom: 24px;
-  gap: 12px;
-}
-
-.status-bar span {
-  color: var(--muted);
-}
-
-.status-bar[data-type='error'] span {
-  color: var(--danger);
-}
-
-.status-bar[data-type='success'] span {
-  color: var(--accent-strong);
-}
-
 .tabs {
   display: flex;
   gap: 12px;
@@ -247,36 +221,6 @@
   display: flex;
   gap: 12px;
   margin-bottom: 16px;
-}
-
-.highlight {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  margin-bottom: 16px;
-}
-
-.highlight h3 {
-  margin: 0 0 6px;
-  font-size: 1.1rem;
-}
-
-.highlight p {
-  margin: 0;
-  color: var(--muted);
-}
-
-.highlight-meta {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  font-size: 0.85rem;
-  color: var(--muted);
 }
 
 .table-wrap {
@@ -471,11 +415,6 @@ button:active {
 }
 
 @media (max-width: 720px) {
-  .status-bar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .search {
     flex-direction: column;
   }

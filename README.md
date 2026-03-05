@@ -109,12 +109,13 @@ Ejemplos de rutas de captura (añade los archivos manualmente):
 
 ### 🌑 Landing (Modo Oscuro)
 <p align="center">
-  <img width="100%" alt="landing oscuro" src="https://github.com/user-attachments/assets/a5fc250a-957b-40d3-aa4b-8af53fc3e9bf" />
+  <img width="100%" alt="landing oscuro" src="https://github.com/user-attachments/assets/737763fd-9799-4635-b725-fa37cedc03e3" />
+ />
 </p>
 
 ### 📝 Editar Producto
 <p align="center">
-  <img width="100%" alt="editar" src="https://github.com/user-attachments/assets/b7ffc203-e42f-446a-8b1e-0d1aec85af5f" />
+  <img width="100%" alt="editar"  />
 </p>
 
 ### ✅ Después de Editar

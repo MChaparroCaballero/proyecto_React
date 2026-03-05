@@ -99,60 +99,53 @@ Incluye aquí imágenes que muestren la app en ejecución. Puedes crear una carp
 Ejemplos de rutas de captura (añade los archivos manualmente):
 ### 📦 Inventario
 <p align="center">
-  <img width="100%" alt="Inventario" src="https://github.com/user-attachments/assets/f9ba6ac7-b7bd-47e1-81bd-063d069828ab" />
+  <img width="100%" alt="Inventario" src="https://github.com/user-attachments/assets/aa48b118-b230-4fdb-a543-b61a0bc9c848" />
 </p>
 
 ### 🌅 Landing (Modo Claro)
 <p align="center">
-  <img width="100%" alt="landing claro" src="https://github.com/user-attachments/assets/f1a2d5ca-3959-4488-8b8e-18b10fb7cabc" />
+  <img width="100%" alt="landing claro"src="https://github.com/user-attachments/assets/82d484e0-cf03-4a7f-bd1e-53f0948eb274"/>
 </p>
 
 ### 🌑 Landing (Modo Oscuro)
 <p align="center">
-  <img width="100%" alt="landing oscuro" src="https://github.com/user-attachments/assets/737763fd-9799-4635-b725-fa37cedc03e3" />
- />
+  <img width="100%" alt="landing oscuro" src="https://github.com/user-attachments/assets/aa48b118-b230-4fdb-a543-b61a0bc9c848" />
 </p>
 
 ### 📝 Editar Producto
 <p align="center">
-  <img width="100%" alt="editar"  />
+  <img width="100%" alt="editar" src="https://github.com/user-attachments/assets/bdc66522-43a2-400e-a2d5-d662b348ccda" />
 </p>
 
 ### ✅ Después de Editar
 <p align="center">
-  <img width="100%" alt="despue_editar" src="https://github.com/user-attachments/assets/258a5b2f-db45-42e4-bbe5-6f63c3fcf4d7" />
+  <img width="100%" alt="despue_editar"  src="https://github.com/user-attachments/assets/bbc8e33c-29eb-490a-bceb-6a6208045274" />
 </p>
 
 ### ➕ Nuevo Producto
 <p align="center">
-  <img width="100%" alt="nuevo_producto" src="https://github.com/user-attachments/assets/0b7b616a-74b2-45da-8047-c6293e200a6b" />
+  <img width="100%" alt="nuevo_producto" src="https://github.com/user-attachments/assets/bf0e6351-8a56-499a-98ce-50e34cca9635" />
 </p>
 
 ### ✨ Confirmación Nuevo Producto
 <p align="center">
-  <img width="100%" alt="despues_nuevo_producto" src="https://github.com/user-attachments/assets/95dbb84c-a23a-4fd0-8e6a-5f2f4c488ea0" />
+  <img width="100%" alt="despues_nuevo_producto" src="https://github.com/user-attachments/assets/cead915d-e4a7-4613-82f5-6d14e3028cf2" />
 </p>
 
 ### Buscar producto
 <p align="center">
-  <img width="100%" alt="buscar_por_id" src="https://github.com/user-attachments/assets/12f8b2f9-2e1b-4f2e-ba9c-58a185bf30e4" />
+  <img width="100%" alt="buscar_por_id" src="https://github.com/user-attachments/assets/92b3fd49-bcd8-4878-8432-9e21711c33a3" />
  />
-</p>
-
-### Resultado de buscar producto
-<p align="center">
-  <img width="100%" alt="despues_buscar_por_id" src="https://github.com/user-attachments/assets/2cd46223-7dc8-475f-b680-c029376809a9" />
-" />
 </p>
 
 ### 🗑️ Eliminar Producto
 <p align="center">
-  <img width="100%" alt="eliminar_producto" src="https://github.com/user-attachments/assets/cd598c7a-caa3-4444-a702-5d28db773e89" />
+  <img width="100%" alt="eliminar_producto" src="https://github.com/user-attachments/assets/4536f159-2a86-4601-8c65-34957b35519a" />
 </p>
 
 ### 🏁 Estado Final
 <p align="center">
-  <img width="100%" alt="despues_eliminar" src="https://github.com/user-attachments/assets/8643d125-c52d-43ff-a08f-cb58c8717dae" />
+  <img width="100%" alt="despues_eliminar" src="https://github.com/user-attachments/assets/af2bd15f-47d2-4636-9095-0aaf2d250241" />
 </p>
 
 
